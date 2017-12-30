@@ -93,6 +93,7 @@ def cli(ip, port, effect, duration, bulb, auto_on):
         duration=duration,
         auto_on=auto_on,
     ))
+    print(BULBS)
 
 
 @cli.command()
@@ -372,7 +373,7 @@ def status():
     for bulb in BULBS:
         click.echo("\nBulb parameters:")
         for key, value in bulb.get_properties().items():
-            if key == 'rgb':
+            if key == 'rgb' and value:
                 value = hex(int(value)).replace("0x", "#")
             click.echo("* {}: {}".format(key, value))
 
