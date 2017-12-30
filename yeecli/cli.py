@@ -108,11 +108,12 @@ def brightness(value):
 @click.argument("value", type=click.IntRange(1, 100, clamp=True))
 def increase(value):
     """Increase the brightness of the bulb."""
-    click.echo("Increasing bulb's brightness by {}".format(value))
     for bulb in BULBS:
-        bright = int(bulb.get_properties()['bright']) + value
-
+        prop = bulb.get_properties()
+        bright = int(prop['bright']) + value
         bright = 100 if bright > 100 else bright
+        click.echo("Increasing {} brightness to {}".format(
+            prop['name'], bright))
 
         bulb.set_brightness(bright)
 
@@ -121,11 +122,12 @@ def increase(value):
 @click.argument("value", type=click.IntRange(1, 100, clamp=True))
 def decrease(value):
     """Decrease the brightness of the bulb."""
-    click.echo("Decreasing bulb's brightness by {}".format(value))
     for bulb in BULBS:
-        bright = int(bulb.get_properties()['bright']) - value
-
+        prop = bulb.get_properties()
+        bright = int(prop['bright']) - value
         bright = 1 if bright < 1 else bright
+        click.echo("Decreasing {} brightness to {}".format(
+            prop['name'], bright))
 
         bulb.set_brightness(bright)
 
