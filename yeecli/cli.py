@@ -93,7 +93,6 @@ def cli(ip, port, effect, duration, bulb, auto_on):
         duration=duration,
         auto_on=auto_on,
     ))
-    print(BULBS)
 
 
 @cli.command()
