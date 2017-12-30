@@ -105,6 +105,32 @@ def brightness(value):
 
 
 @cli.command()
+@click.argument("value", type=click.IntRange(1, 100, clamp=True))
+def increase(value):
+    """Increase the brightness of the bulb."""
+    click.echo("Increasing bulb's brightness by {}".format(value))
+    for bulb in BULBS:
+        bright = int(bulb.get_properties()['bright']) + value
+
+        bright = 100 if bright > 100 else bright
+
+        bulb.set_brightness(bright)
+
+
+@cli.command()
+@click.argument("value", type=click.IntRange(1, 100, clamp=True))
+def decrease(value):
+    """Decrease the brightness of the bulb."""
+    click.echo("Decreasing bulb's brightness by {}".format(value))
+    for bulb in BULBS:
+        bright = int(bulb.get_properties()['bright']) - value
+
+        bright = 1 if bright < 1 else bright
+
+        bulb.set_brightness(bright)
+
+
+@cli.command()
 @click.argument("degrees", type=click.IntRange(1700, 6500, clamp=True))
 def temperature(degrees):
     """Set the color temperature of the bulb."""
@@ -156,7 +182,8 @@ def pulse(hex_color, pulses):
         else:
             action = yeelight.Flow.actions.recover
 
-        bulb.start_flow(yeelight.Flow(count=pulses, action=action, transitions=transitions))
+        bulb.start_flow(yeelight.Flow(
+            count=pulses, action=action, transitions=transitions))
 
 
 @cli.command()
@@ -318,7 +345,8 @@ def sunrise(duration=5 * 60):
         tr.TemperatureTransition(2100, duration=duration / 2, brightness=50),
         tr.TemperatureTransition(5000, duration=duration / 2, brightness=100),
     ]
-    flow = yeelight.Flow(count=1, action=yeelight.flow.Action.stay, transitions=transitions)
+    flow = yeelight.Flow(
+        count=1, action=yeelight.flow.Action.stay, transitions=transitions)
     for bulb in BULBS:
         bulb.start_flow(flow)
 
